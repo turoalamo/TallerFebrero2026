@@ -1,0 +1,13 @@
+---
+- hosts: centos
+  become: true
+  
+  tasks: 
+
+  - name: update all installed packages
+    ansible.builtin.dnf:
+      name: "*"
+      state: latest
+
+  - name: Reboot servers
+    ansible.builtin.reboot:
