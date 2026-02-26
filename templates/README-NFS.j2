@@ -1,0 +1,22 @@
+==============================
+ ARCHIVO DE PRUEBA NFS
+==============================
+
+Hostname: {{ ansible_hostname }}
+FQDN: {{ ansible_fqdn }}
+
+IP: {{ ansible_default_ipv4.address }}
+Interfaz: {{ ansible_default_ipv4.interface }}
+
+Sistema: {{ ansible_distribution }} {{ ansible_distribution_version }}
+Kernel: {{ ansible_kernel }}
+
+Usuario: {{ ansible_user_id }}
+UID: {{ ansible_user_uid }}
+GID: {{ ansible_user_gid }}
+
+Fecha: {{ ansible_date_time.iso8601 }}
+Zona horaria: {{ ansible_date_time.tz }}
+
+Punto de montaje: /mnt/nfs_share
+Servidor NFS: {{ nfs_server | default('no definido') }}

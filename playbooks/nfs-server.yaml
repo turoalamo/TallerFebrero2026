@@ -1,6 +1,6 @@
 ---
 - name: Configure NFS server (Ubuntu 24.04 & CentOS 9)
-  hosts: linux
+  hosts: fileserver
   become: true
 
   tasks:
@@ -86,6 +86,13 @@
     - name: Allow NFS on Ubuntu firewall
       ansible.builtin.command: ufw allow 2049/tcp
       when: ansible_os_family == "Debian"
+
+    - name: Copy test file to server
+      ansible.builtin.template:
+        src: ../templates/README-NFS.j2
+        dest: /srv/nfs/shared/README-NFS.txt
+        owner: nobody
+        mode: u=r,g=r,o=r
 
   handlers:
 

@@ -1,0 +1,45 @@
+---
+- name: Configure NFS client with autofs (Ubuntu 24.04)
+  hosts: ubuntu
+  become: true
+
+  tasks:
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - autofs
+          - nfs-common
+          - python3
+        state: present
+        update_cache: true
+
+    - name: Configure autofs master file
+      ansible.builtin.copy:
+        dest: /etc/auto.master.d/nfs.autofs
+        content: |
+          /mnt /etc/auto.nfs
+        owner: root
+        mode: '0644'
+      notify: Restart autofs
+
+    - name: Configure autofs map file
+      ansible.builtin.copy:
+        dest: /etc/auto.nfs
+        content: |
+          shared -fstype=nfs4 192.168.10.11:/srv/nfs/shared
+        owner: root
+        mode: '0644'
+      notify: Restart autofs
+
+    - name: Ensure autofs service is enabled and running
+      ansible.builtin.systemd_service:
+        name: autofs
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Restart autofs
+      ansible.builtin.systemd_service:
+        name: autofs
+        state: restarted
